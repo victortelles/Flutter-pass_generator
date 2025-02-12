@@ -35,6 +35,7 @@ class _HomePageState extends State<HomePage> {
   final List<int> passwordLengths = [8, 12, 16, 20, 24, 28, 32, 36, 40];
 
   //Mapa para almacenar las contraseñas generadas
+  //Guardar la longitud de caracter y el string del password.
   final Map<int, String> passwords = {};
 
   @override
@@ -42,8 +43,8 @@ class _HomePageState extends State<HomePage> {
     super.initState();
 
     //Inicializar valores por default
-    for (var lengh in passwordLengths) {
-      passwords[lengh] = 'Contraseñas sin guardar';
+    for (var length in passwordLengths) {
+      passwords[length] = 'Contraseñas sin guardar';
     }
   }
 
@@ -63,12 +64,16 @@ class _HomePageState extends State<HomePage> {
             Expanded(
               //Widget ListView
               child: ListView(
+                //Lista de longitud de caracteres
                 children: passwordLengths.map((length) {
+                  //Contenedor principal
                   return Container(
+                    //Caja
                     decoration: BoxDecoration(
                       border: Border.all(color: Colors.black),
                       borderRadius: BorderRadius.circular(10),
                     ),
+                    //Espaciado
                     padding: const EdgeInsets.all(8.0),
                     margin: const EdgeInsets.all(10),
                     child: Column(
@@ -89,15 +94,16 @@ class _HomePageState extends State<HomePage> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
+                            //Icon Button Refresh
                             IconButton(
                               onPressed: () {
                                 setState(() {
                                   passwords[length] = generarPassword(length);
                                 });
                               },
-                              //Icon Refresh
                               icon: Icon(Icons.refresh),
                             ),
+                            //Icon Button Copy
                             IconButton(
                               onPressed: () {
                                 setState(() {
@@ -105,16 +111,49 @@ class _HomePageState extends State<HomePage> {
                                       ClipboardData(text: passwords[length]!));
                                 });
                               },
-                              //Icono Copy
                               icon: Icon(Icons.copy),
                             ),
                           ],
-                        )
+                        ),
                       ],
                     ),
                   );
                 }).toList(),
               ),
+            ),
+
+            //Botones
+            ElevatedButton(
+              onPressed: () {
+                setState(() {
+                  for (var length in passwordLengths) {
+                    passwords[length] = generarPassword(length);
+                  }
+                });
+
+                //Alertas
+                ScaffoldMessenger.of(context)
+                  ..hideCurrentSnackBar()
+                  ..showSnackBar(
+                    SnackBar(
+                      content: Text("Se generaron contraseñas"),
+                    ),
+                  );
+              },
+              //Text
+              child: Text("Generar Contraseñas"),
+            ),
+
+            OutlinedButton(
+              onPressed: () {
+                setState(() {
+                  for (var length in passwordLengths) {
+                    passwords[length] = "Contraseña sin generar";
+                  }
+                });
+              },
+              //Text
+              child: Text("Borrar contraseñas"),
             ),
           ],
         ),
