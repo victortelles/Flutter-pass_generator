@@ -63,8 +63,57 @@ class _HomePageState extends State<HomePage> {
             Expanded(
               //Widget ListView
               child: ListView(
-                //Implementar la logica
+                children: passwordLengths.map((length) {
+                  return Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.black),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    padding: const EdgeInsets.all(8.0),
+                    margin: const EdgeInsets.all(10),
+                    child: Column(
+                      children: [
+                        //Text Caracteres
+                        Text(
+                          "$length caracteres",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
+                          ),
+                        ),
 
+                        //Text passwords
+                        Text(passwords[length]!),
+
+                        //Fila para Iconos
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            IconButton(
+                              onPressed: () {
+                                setState(() {
+                                  passwords[length] = generarPassword(length);
+                                });
+                              },
+                              //Icon Refresh
+                              icon: Icon(Icons.refresh),
+                            ),
+                            IconButton(
+                              onPressed: () {
+                                setState(() {
+                                  Clipboard.setData(
+                                      ClipboardData(text: passwords[length]!));
+                                });
+                              },
+                              //Icono Copy
+                              icon: Icon(Icons.copy),
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
+                  );
+                }).toList(),
               ),
             ),
           ],
@@ -72,8 +121,9 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
-    //Funcion para generar la contraseña
-    String generarPassword(int charsNum) {
+
+  //Funcion para generar la contraseña
+  String generarPassword(int charsNum) {
     return String.fromCharCodes(
       List.generate(charsNum, (index) => Random().nextInt(48) + 60),
     );
